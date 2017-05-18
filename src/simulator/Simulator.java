@@ -116,12 +116,24 @@ public class Simulator {
 		}
 	}
 	
+	public void setRequests(){
+		int[][] leafNodes = new int[][]{{0,0,0,1,1,2},
+							 		    {1,2,3,2,3,3}};
+		
+		for(int i = 0 ; i < requests.size(); i ++){
+			requests.get(i).getVirtualNodes().get(0).setMap(leafNodes[0][i]);
+			requests.get(i).getVirtualNodes().get(1).setMap(leafNodes[1][i]);
+		}
+	}
+	
 	public int getTranspondersODU(int transponderCapacity, int maxBandwidth, String distribution, boolean backupPath){
 		
 		for(VirtualRequest vr: requests){
 			List<VirtualNode> virtualNodes = vr.getVirtualNodes();
 			int start = virtualNodes.get(0).getMapID();
 			int finish = virtualNodes.get(virtualNodes.size() - 1).getMapID();
+			
+			//System.out.println(virtualNodes.size());
 			
 			int traffic = -1;
 			while(traffic <= 0 || traffic > maxBandwidth){
@@ -131,6 +143,7 @@ public class Simulator {
 			}
 			
 			DijkstraShortestPath dsp = new DijkstraShortestPath(topology, start, finish);
+			//System.out.println(start + " " + finish);
 			updateTransponderBandwidth(dsp.getShortestPath(), traffic);
 			
 			if(backupPath) updateTransponderBandwidth(dsp.getDisjointShortestPath(), traffic);			

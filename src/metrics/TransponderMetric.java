@@ -30,7 +30,7 @@ public class TransponderMetric{
 	}
 	
 	public void getResults(BANDWIDTH_DISTRIBUTION distributionType, EMBEDDING_METHOD method) throws IOException{
-		File file = new File(PROJECT_DIRECTORY + RESULTS_DIRECTORY + "transponder_correct_4node_"+ distributionType.name().toLowerCase() + "_" + method.name().toLowerCase() + ".csv");
+		File file = new File(PROJECT_DIRECTORY + RESULTS_DIRECTORY + "transponder_new_4node_"+ distributionType.name().toLowerCase() + "_" + method.name().toLowerCase() + ".csv");
 		PrintWriter pw = new PrintWriter(file);
 		
 		pw.println("Max_Bandwidth,ODU,OTN,# ODU better than OTN ");
@@ -43,8 +43,11 @@ public class TransponderMetric{
 			int sum2 = 0;
 			for(int j = 0; j < 1000; j++){
 				Simulator simulator = new Simulator(NetworkTopology.SIMPLE,Integer.MAX_VALUE, Integer.MAX_VALUE);
-				simulator.setNumberOfRequest(500);
+				//simulator.setNumberOfRequest(500);
+				simulator.setMaxNodes(1);// setting requests with only two nodes.
+				simulator.setNumberOfRequest(6);
 				simulator.generateRequests();
+				simulator.setRequests();
 				
 				int oduTransponders = simulator.getTranspondersODU(100,i, distributionType.name().toLowerCase(), (method.equals(EMBEDDING_METHOD.WO_BACKUP))?false:true);
 				int otnTransponders = simulator.getTransponderOTN(100,i, distributionType.name().toLowerCase(), (method.equals(EMBEDDING_METHOD.WO_BACKUP))?false:true);
